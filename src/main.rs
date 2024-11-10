@@ -188,7 +188,7 @@ fn main() -> Result<()> {
                 topics(&a2do, on)?;
 
                 loop {
-                    let c = getch();
+                    let mut c = getch();
 
                     display_command(c, 1);
 
@@ -344,24 +344,34 @@ fn main() -> Result<()> {
                             }
                         }
                         config::APPEND => {
-                            clear();
+                            display_command(c, 1);
 
-                            addstr("[new todos-topic]\t");
+                            let (mut x, mut y) = (0, 0);
+                            getmaxyx(stdscr(), &mut y, &mut x);
+                            mvprintw(y / 2, (x / 2) as i32, "");
 
                             curs_set(CURSOR_VISIBILITY::CURSOR_VISIBLE);
 
-                            echo();
-
-                            let mut c = getch();
                             let mut t = "".to_owned();
+                            let mut n = 0;
 
-                            while c != config::ESC {
-                                echo();
-
-                                t = format!("{}{}", t, c as u8 as char);
+                            loop {
                                 c = getch();
 
-                                noecho();
+                                match c {
+                                    config::ESC => break,
+                                    config::REMOVE => {
+                                        t.pop();
+                                        n -= 1;
+                                        mvprintw(y / 2, (x / 2) + n as i32, " ");
+                                        mvprintw(y / 2, (x / 2) as i32, &t);
+                                    }
+                                    _ => {
+                                        t = format!("{}{}", t, c as u8 as char);
+                                        n += 1;
+                                        mvprintw(y / 2, (x / 2) as i32, &t);
+                                    }
+                                }
                             }
 
                             attron(COLOR_PAIR(config::HIGHLIGHT_PAIR));
@@ -377,6 +387,7 @@ fn main() -> Result<()> {
                             drop(ctx);
 
                             on = 0;
+
                             clear();
 
                             topics(&a2do, on)?;
