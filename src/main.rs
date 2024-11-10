@@ -4,6 +4,8 @@ mod ui;
 
 use ll::has_colors;
 use ncurses::*;
+use std::fs::{metadata, File};
+use std::io::prelude::*;
 use std::sync::{Arc, Mutex};
 use thiserror::Error;
 use whoami;
@@ -62,15 +64,6 @@ fn display(s: &str) {
 
     let j = s.len() as i32;
     mvprintw(y - 1 as i32, (x / 2) - (j / 2) as i32, &format!("{s}"));
-}
-
-fn display_message(s: &str) {
-    let w = stdscr();
-
-    let y = getmaxy(w);
-
-    let j = s.len() as i32;
-    mvprintw(y - j as i32, 0 as i32, &format!("{s}"));
 }
 
 fn init(file: &str) -> Result<Arc<Mutex<memory::Memory<String, String>>>> {
@@ -159,20 +152,25 @@ where
 fn main() -> Result<()> {
     startup();
 
-    let mut file = std::env::args()
-        .skip(1)
-        .next()
-        .ok_or(Error::Unknown)?;
+    let (user, device) = (whoami::username(), whoami::devicename());
+    let file = match std::env::args().skip(1).next() {
+        Some(x) => x,
+        _ => {
+            let s = "_.go22dos".to_owned();
+            if !metadata(&s).is_ok() {
+                File::create(s.clone())
+                    .and_then(|mut f| f.write_all(b"{}"))
+                    .map_err(|_| Error::Unknown)?;
+            }
+            s
+        }
+    };
     let mut a2do = init(&file)?;
     let mut on = 0;
 
     loop {
         start_screen();
-        display(&format!(
-            "{} @ {}",
-            whoami::username(),
-            whoami::devicename()
-        ));
+        display(&format!("{} @ {}", user, device));
 
         let ctx = a2do.lock().unwrap();
         let mut ubt = ctx.idxs.len();
