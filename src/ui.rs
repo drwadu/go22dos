@@ -47,10 +47,18 @@ where
                     mv(j, 0);
                     match j == on as i32 {
                         true => {
-                            let topic = ctx.idxs.get(on).ok_or(UserInterfaceError::Unknown).unwrap();
-                            let items = ctx.data.get(topic).ok_or(UserInterfaceError::Unknown).unwrap();
+                            let topic =
+                                ctx.idxs.get(on).ok_or(UserInterfaceError::Unknown).unwrap();
+                            let items = ctx
+                                .data
+                                .get(topic)
+                                .ok_or(UserInterfaceError::Unknown)
+                                .unwrap();
                             let n = items.len() as f32;
-                            let m = items.iter().filter(|item| item.to_string().starts_with('1')).count() as f32;
+                            let m = items
+                                .iter()
+                                .filter(|item| item.to_string().starts_with('1'))
+                                .count() as f32;
 
                             addstr(&format!("[{:.2}]\t ", m / n));
 
@@ -60,13 +68,43 @@ where
                         }
                         _ => {
                             //addstr(&format!("[topic]\t {}", k));
-                            let topic = ctx.idxs.get(j as usize).ok_or(UserInterfaceError::Unknown).unwrap();
-                            let items = ctx.data.get(topic).ok_or(UserInterfaceError::Unknown).unwrap();
+                            let topic = ctx
+                                .idxs
+                                .get(j as usize)
+                                .ok_or(UserInterfaceError::Unknown)
+                                .unwrap();
+                            let items = ctx
+                                .data
+                                .get(topic)
+                                .ok_or(UserInterfaceError::Unknown)
+                                .unwrap();
                             let n = items.len() as f32;
-                            let m = items.iter().filter(|item| item.to_string().starts_with('1')).count() as f32;
+                            let m = items
+                                .iter()
+                                .filter(|item| item.to_string().starts_with('1'))
+                                .count() as f32;
 
-                            addstr(&format!("[{:.2}]\t ", m / n));
+                            let q = m / n;
 
+                            match q {
+                                1.0 => {
+                                    attron(COLOR_PAIR(config::CHECKBOX_DONE_PAIR));
+                                    addstr(&format!("[{:.2}]", q));
+                                    attroff(COLOR_PAIR(config::CHECKBOX_DONE_PAIR));
+                                }
+                                0.0 => {
+                                    attron(COLOR_PAIR(config::CHECKBOX_TODO_PAIR));
+                                    addstr(&format!("[{:.2}]", q));
+                                    attroff(COLOR_PAIR(config::CHECKBOX_TODO_PAIR));
+                                }
+                                _ => {
+                                    attron(COLOR_PAIR(config::OTHER_PAIR));
+                                    addstr(&format!("[{:.2}]", q));
+                                    attroff(COLOR_PAIR(config::OTHER_PAIR));
+                                }
+                            }
+
+                            addstr("\t ");
                             addstr(&k.as_ref());
                         }
                     }

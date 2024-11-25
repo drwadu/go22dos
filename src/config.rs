@@ -17,9 +17,9 @@ const CHECKBOX_TODO_PAIR_SND: i16 = ncurses::COLOR_RED;
 pub const CHECKBOX_DONE_PAIR: i16 = 3;
 const CHECKBOX_DONE_PAIR_FST: i16 = ncurses::COLOR_WHITE;
 const CHECKBOX_DONE_PAIR_SND: i16 = ncurses::COLOR_GREEN;
-const A2DOS_PAIR: i16 = 6;
-const A2DOS_PAIR_FST: i16 = ncurses::COLOR_BLUE;
-const A2DOS_PAIR_SND: i16 = ncurses::COLOR_BLACK;
+pub const OTHER_PAIR: i16 = 6;
+const OTHER_PAIR_FST: i16 = ncurses::COLOR_WHITE;
+const OTHER_PAIR_SND: i16 = ncurses::COLOR_CYAN;
 
 pub fn init_pairs() {
     ncurses::init_pair(REGULAR_PAIR, REGULAR_PAIR_FST, REGULAR_PAIR_SND);
@@ -34,7 +34,7 @@ pub fn init_pairs() {
         CHECKBOX_DONE_PAIR_FST,
         CHECKBOX_DONE_PAIR_SND,
     );
-    ncurses::init_pair(A2DOS_PAIR, A2DOS_PAIR_FST, A2DOS_PAIR_SND);
+    ncurses::init_pair(OTHER_PAIR, OTHER_PAIR_FST, OTHER_PAIR_SND);
 }
 
 //pub const ENTER: i32 = 13;
