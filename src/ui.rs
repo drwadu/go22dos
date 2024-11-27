@@ -134,22 +134,22 @@ where
                 let (cp, s) = match item.as_ref().chars().next() {
                     Some('0') => (COLOR_PAIR(config::CHECKBOX_TODO_PAIR), "[ ]"),
                     Some('1') => (COLOR_PAIR(config::CHECKBOX_DONE_PAIR), "[X]"),
-                    _ => (COLOR_PAIR(config::CHECKBOX_DONE_PAIR), "[?]"),
+                    _ => (COLOR_PAIR(config::OTHER_PAIR), "[?]"),
                 };
                 match i == on_item {
                     true => {
-                        attron(cp);
-                        addstr(s);
-                        attroff(cp);
-
-                        addstr("\t ");
+                        addstr(&format!("{s}\t "));
 
                         attron(COLOR_PAIR(config::HIGHLIGHT_PAIR));
                         addstr(&item.as_ref()[1..]);
                         attroff(COLOR_PAIR(config::HIGHLIGHT_PAIR));
                     }
                     _ => {
-                        addstr(&format!("{}\t {}", s, &item.as_ref()[1..]));
+                        attron(cp);
+                        addstr(s);
+                        attroff(cp);
+
+                        addstr(&format!("\t {}", &item.as_ref()[1..]));
                     }
                 }
             }),
