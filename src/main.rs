@@ -292,6 +292,7 @@ fn main() -> Result<()> {
                                             delete_item(&mut a2do, on, on_item).unwrap();
                                             add_item(&mut a2do, on, format!("1{}", &item[1..]))
                                         })?;
+                                        clear();
 
                                         items(&a2do, on, on_item)?;
                                     }
@@ -412,7 +413,7 @@ fn main() -> Result<()> {
                     }
                 }
             }
-            config::QUIT => {
+            config::QUIT | config::ESC => {
                 save(&a2do, &file)?;
                 flash();
                 endwin();
