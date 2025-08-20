@@ -55,6 +55,7 @@ where
 }
 
 impl<K: Serializable, V: Serializable> Memory<K, V> {
+    #[allow(dead_code)]
     fn new() -> Self {
         Self {
             data: std::collections::HashMap::new(),

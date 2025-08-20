@@ -1,8 +1,13 @@
-pub const START_SCREEN: [&'static str; 4] = [
-    "            go22dos          ",
-    "                             ",
-    "type t\t to go to todos      ",
-    "type q\t to exit             ",
+pub const START_SCREEN: [&'static str; 9] = [
+    "            go22dos                   ",
+    "                                      ",
+    "type t     to go to todos             ",
+    "type j/k   to go down/up              ",
+    "type s     to select specific todos   ",
+    "type a     to add todo(s)             ",
+    "type d     to delete todo(s)          ",
+    "type ESC   to exit todos or text input",
+    "type q     to quit                    ",
 ];
 
 const REGULAR_PAIR: i16 = 0;
@@ -12,13 +17,13 @@ pub const HIGHLIGHT_PAIR: i16 = 1;
 const HIGHLIGHT_PAIR_FST: i16 = ncurses::COLOR_BLACK;
 const HIGHLIGHT_PAIR_SND: i16 = ncurses::COLOR_WHITE;
 pub const CHECKBOX_TODO_PAIR: i16 = 2;
-const CHECKBOX_TODO_PAIR_FST: i16 = ncurses::COLOR_WHITE;
+const CHECKBOX_TODO_PAIR_FST: i16 = ncurses::COLOR_BLACK;
 const CHECKBOX_TODO_PAIR_SND: i16 = ncurses::COLOR_RED;
 pub const CHECKBOX_DONE_PAIR: i16 = 3;
-const CHECKBOX_DONE_PAIR_FST: i16 = ncurses::COLOR_WHITE;
+const CHECKBOX_DONE_PAIR_FST: i16 = ncurses::COLOR_BLACK;
 const CHECKBOX_DONE_PAIR_SND: i16 = ncurses::COLOR_GREEN;
 pub const OTHER_PAIR: i16 = 6;
-const OTHER_PAIR_FST: i16 = ncurses::COLOR_WHITE;
+const OTHER_PAIR_FST: i16 = ncurses::COLOR_BLACK;
 const OTHER_PAIR_SND: i16 = ncurses::COLOR_CYAN;
 
 pub fn init_pairs() {
@@ -42,6 +47,7 @@ pub const TAB: i32 = 9;
 pub const ESC: i32 = 27;
 pub const BG: i32 = 71;
 pub const APPEND: i32 = 97;
+pub const EDIT: i32 = 98;
 pub const DELETE: i32 = 100;
 pub const EXIT: i32 = 101;
 pub const SG: i32 = 103;

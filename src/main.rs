@@ -296,6 +296,125 @@ fn main() -> Result<()> {
 
                                         items(&a2do, on, on_item)?;
                                     }
+                                    config::EDIT => {
+                                        let mut t =
+                                            access_item(&mut a2do, on, on_item).map(|item| {
+                                                delete_item(&mut a2do, on, on_item).unwrap();
+                                                item[1..].to_owned()
+                                            })?;
+
+                                        let (mut x, mut y) = (0, 0);
+                                        getmaxyx(stdscr(), &mut y, &mut x);
+                                        let mut n = t.len() - 1;
+                                        let mut curat = n;
+                                        mvprintw(y / 2, (x / 2) + n as i32, &t);
+
+                                        curs_set(CURSOR_VISIBILITY::CURSOR_VISIBLE);
+
+                                        loop {
+                                            c = getch();
+
+                                            match c {
+                                                17 => match getch() {
+                                                    // ctrl
+                                                    103 => {
+                                                        // g
+                                                        curat -= 1;
+                                                        mvcur(
+                                                            y / 2,
+                                                            (x / 2) + (curat + 1) as i32,
+                                                            y / 2,
+                                                            (x / 2) + curat as i32,
+                                                        );
+                                                    }
+                                                    104 => {
+                                                        // h
+                                                        if curat < (t.len() - 1) {
+                                                            curat += 1;
+                                                            mvcur(
+                                                                y / 2,
+                                                                (x / 2) + (curat - 1) as i32,
+                                                                y / 2,
+                                                                (x / 2) + curat as i32,
+                                                            );
+                                                        }
+                                                    }
+                                                    _ => continue,
+                                                },
+                                                config::REMOVE => {
+                                                    //mvprintw(
+                                                    //    y / 2,
+                                                    //    (x / 2) + n as i32,
+                                                    //    &t.chars()
+                                                    //        .skip(curat)
+                                                    //        .next()
+                                                    //        .unwrap()
+                                                    //        .to_string(),
+                                                    //);
+                                                    //mvprintw(
+                                                    //    y / 2,
+                                                    //    (x / 2) + n as i32,
+                                                    //    &std::iter::repeat(" ")
+                                                    //        //.take(n + n - 1)
+                                                    //        .take(n+1)
+                                                    //        .collect::<String>(),
+                                                    //);
+                                                    //mvcur(
+                                                    //    y / 2,
+                                                    //    (x / 2) + (curat + 1) as i32,
+                                                    //    y / 2,
+                                                    //    (x / 2) + curat as i32,
+                                                    //);
+                                                    //mvprintw(y / 2, (x / 2) + n as i32, &t);
+                                                    for (i,c_) in t.chars().enumerate() {
+                                                        match i == curat {
+                                                            false => mvprintw(y / 2, (x / 2) + i as i32, c_.to_string().as_str()),
+                                                            true =>  mvprintw(y / 2, (x / 2) + i as i32, "")
+                                                        };
+                                                    }
+                                                    mvprintw(
+                                                        y / 2,
+                                                        (x / 2) + n as i32,
+                                                        &std::iter::repeat(" ")
+                                                            //.take(n + n - 1)
+                                                            .take(n+1)
+                                                            .collect::<String>(),
+                                                    );
+
+                                                    t.remove(curat);
+                                                    curat -= 1;
+                                                    n -= 1;
+                                                }
+                                                config::ESC => break,
+                                                _ => {
+                                                    t = format!("{}{}", t, c as u8 as char);
+                                                    n += 1;
+                                                    mvprintw(y / 2, (x / 2) as i32, &t);
+                                                }
+                                            }
+                                        }
+
+                                        attron(COLOR_PAIR(config::HIGHLIGHT_PAIR));
+                                        addstr(&t);
+                                        attroff(COLOR_PAIR(config::HIGHLIGHT_PAIR));
+
+                                        add_item(&mut a2do, on, format!("0{}", t))?;
+
+                                        curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE);
+
+                                        let ctx = a2do.lock().unwrap();
+                                        ub = ctx
+                                            .data
+                                            .get(ctx.idxs.get(on).unwrap())
+                                            .map(|v| v.len())
+                                            .unwrap();
+                                        drop(ctx);
+
+                                        on_item = 0;
+                                        clear();
+
+                                        items(&a2do, on, on_item)?;
+                                    }
                                     config::DELETE => {
                                         delete_item(&mut a2do, on, on_item)?;
 
