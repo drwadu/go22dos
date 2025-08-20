@@ -1,9 +1,10 @@
-pub const START_SCREEN: [&'static str; 9] = [
+pub const START_SCREEN: [&'static str; 10] = [
     "            go22dos                   ",
     "                                      ",
     "type t     to go to todos             ",
     "type j/k   to go down/up              ",
     "type s     to select specific todos   ",
+    "type TAB   to tick off todo           ",
     "type a     to add todo(s)             ",
     "type d     to delete todo(s)          ",
     "type ESC   to exit todos or text input",
