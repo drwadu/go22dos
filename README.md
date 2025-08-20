@@ -1,3 +1,4 @@
+[![Crates.io](https://img.shields.io/crates/v/fasb?label=crates.io%20%28bin%29)](https://crates.io/crates/go22dos)
 # go22dos
 
 A basic TODOs app tailored to my personal needs.
