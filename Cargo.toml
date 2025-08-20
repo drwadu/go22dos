@@ -2,6 +2,7 @@
 name = "go22dos"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
 
 [dependencies]
 ncurses = "5.101.0"
